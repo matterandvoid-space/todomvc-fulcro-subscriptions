@@ -12,18 +12,7 @@
     (case filter "completed" :completed, "active" :active, :all)))
 
 (deflayer2-sub todos-list :root/todo-list)
-(comment
-  (macroexpand '(deflayer2-sub todos-list :root/todo-list))
-
-
-  (macroexpand '(deflayer2-sub todos-list (fn [db_] (get-in @db_ [:some :path]))))
-  (macroexpand '(defsubraw form-todo [db_]
-     (when-let [ident (:root/new-todo @db_ nil)]
-       (get-in @db_ ident nil))))
-  )
-
 (deflayer2-sub form-todo-ident :root/new-todo)
-
 
 (defsubraw form-todo
   [db_]
@@ -32,17 +21,19 @@
 
 (defsub fresh-todo-from-form :<- [form-todo] todo.model/fresh-todo)
 
+
+(defn get-todo [fulcro-app todo-id]
+  (fdn/db->tree todo.model/todo-query (todo.model/ident todo-id) (fulcro.app/current-state fulcro-app))
+  ;(todo-eql fulcro-app {::todo.model/id todo-id subs.eql/query-key todo.model/todo-query})
+  )
+
+;; These are equivalent to the below db->tree call.
 ;(def todo-eql
 ;  (fulcro.subs/with-name
 ;    (subs.eql/create-component-subs todo.model/todo-component {})
 ;    (keyword `todo-eql)))
 
 ;(subs.eql/create-component-subs todo.model/todo-component {})
-
-(defn get-todo [fulcro-app todo-id]
-  (fdn/db->tree todo.model/todo-query (todo.model/ident todo-id) (fulcro.app/current-state fulcro-app))
-  ;(todo-eql fulcro-app {::todo.model/id todo-id subs.eql/query-key todo.model/todo-query})
-  )
 
 ;(def todos-list-full
 ;  (fulcro.subs/with-name (subs.eql/expand-ident-list-sub todos-list todo-eql) (keyword `todos-list-full)))
