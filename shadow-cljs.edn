@@ -1,0 +1,21 @@
+{:deps {:aliases [:dev :jvm-options]}
+ :builds
+
+ {:main
+  {:target          :browser
+   :output-dir      "resources/public/js/main"
+   :asset-path      "js/main"
+   :modules         {:main {:init-fn space.matterandvoid.todomvc.client.dev-entry/init}}
+   :closure-defines {malli.registry/type "custom"}
+   :build-options   {:ns-aliases
+                     {com.fulcrologic.guardrails.core com.fulcrologic.guardrails.noop}}
+
+   :devtools        {:preloads [com.fulcrologic.fulcro.inspect.preload
+                                com.fulcrologic.fulcro.inspect.dom-picker-preload]}}
+
+  :node-server
+  {:target    :node-script
+   :main      space.matterandvoid.todomvc.server.node-server/main
+   :output-to "out/node-server.js"
+   :devtools  {:before-load-async space.matterandvoid.todomvc.server.node-server/stop
+               :after-load        space.matterandvoid.todomvc.server.node-server/start}}}}

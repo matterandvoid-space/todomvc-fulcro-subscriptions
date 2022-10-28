@@ -1,0 +1,21 @@
+{
+  "name": "september-2022-todo-mvc-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.34.2",
+    "react-router-dom": "^6.4.1",
+    "shadow-cljs": "^2.20.3",
+    "todomvc-app-css": "^2.4.2",
+    "todomvc-common": "^1.0.5"
+  },
+  "dependencies": {
+    "@js-joda/core": "3.2.0",
+    "@js-joda/locale_en-us": "3.1.1",
+    "@js-joda/timezone": "2.5.0",
+    "use-sync-external-store": "^1.2.0"
+  }
+}

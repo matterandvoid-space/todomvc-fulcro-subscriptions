@@ -1,0 +1,16 @@
+node_modules
+out
+.idea
+.cpcache
+.shadow-cljs
+datalevin/
+.nrepl-port
+resources/public/js/*
+!resources/public/index.html
+package-lock.json
+.clj-kondo
+fe-bundle-report.html
+.lsp
+target
+fe-report.html
+*.iml

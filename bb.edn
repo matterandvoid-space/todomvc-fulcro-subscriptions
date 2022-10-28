@@ -1,0 +1,117 @@
+{:paths
+ ["scripts"]
+
+ :min-bb-version
+ "0.4.0"
+
+ :tasks
+ {:init     (do
+              ;; add any dev aliases (as keywords) you want included when starting the fe and be repls.
+              (def shared-dev-aliases [])
+              (def fe-dev-aliases (into shared-dev-aliases []))
+              (def fe-release-aliases [])
+              (def be-dev-aliases (into shared-dev-aliases [])))
+
+  :requires ([babashka.process :as p :refer [process]]
+             [babashka.fs :as fs]
+             [clojure.edn :as edn]
+             [clojure.string :as str])
+
+  yarn-install
+  (do (println "Executing: yarn install")
+      (shell "yarn"))
+
+  fe-release
+  {:depends [yarn-install]
+   :doc     "Creates release builds for the ClojureScript code via shadow-cljs"
+   :task    (clojure "-X:dev fe-build/release-build :id :main")}
+
+  fe-outdated
+  {:depends [yarn-install]
+   :doc     "Runs yarn outdated"
+   :task    (shell "yarn outdated")}
+
+  fe-test
+  {:depends [yarn-install]
+   :doc     "Runs the frontend tests via karma."
+   :task
+   (do
+     (shell "yarn shadow-cljs compile ci-tests")
+     (shell "yarn karma start --single-run"))}
+
+  fe-report
+  {:depends [yarn-install]
+   :doc     "Creates a shadow-cljs html report at fe-bundle-report.html"
+   :task
+   (clojure "-X:dev fe-build/build-report :id :main")}
+
+  fe
+  {:depends [yarn-install]
+   :doc     "Starts a shadow-cljs watch on the main build"
+   :task    (let [aliases (into *command-line-args* fe-dev-aliases)
+                  builds ["main"]]
+              (shell
+                (cond-> (str "yarn run shadow-cljs watch " (str/join " " builds))
+                  (seq aliases)
+                  (str " -A" (str/join aliases))))
+              (println "STARTING FE"))}
+
+  clean
+  {:doc "Removes deploy and builds dirs and recreates them"
+   :task
+   (let [dirs
+         (filter fs/exists?
+           (concat [".shadow-cljs" "resouces/public/js/main"] ["builds"] (when (fs/exists? "deploy") (fs/glob "deploy" "*.jar"))))]
+     (when (seq dirs)
+       (println "Removing dirs:" (str/join ", " (map (fn [x] (str "'" x "'")) dirs)))
+       (run! (fn [x] (if (fs/directory? x) (fs/delete-tree x) (fs/delete x))) dirs)))}
+
+  be-repl   {:doc "clj -A:jvm-options:dev"
+             :task
+             (let [aliases (str/join (into *command-line-args* (into shared-dev-aliases be-dev-aliases)))]
+               (shell (str "clj -A:jvm-options:dev" aliases)))}
+
+  run-jar
+  {;:depends [fe-release be-release]
+   :task
+   (shell {:dir "deploy" :extra-env {"PORT" "9898"}}
+     (let [jar-file (-> (p/pipeline (p/pb ["ls" "-1t" "target"]) (p/pb ["head" "-n1"])) last :out slurp)
+           ;jar-file (-> (p/pipeline (p/pb ["ls" "-1t" "target"]) (p/pb ['cat])) last :out slurp)
+
+           entry-ns "space.matterandvoid.todomvc.server.system"]
+       (if jar-file
+         (println "jar file: " jar-file)
+         (println "NO jar file"))
+       (shell {:dir "target"} (str "java "
+                                "-cp " jar-file
+                                " --add-opens=java.base/java.nio=ALL-UNNAMED "
+                                " --add-opens=java.base/sun.nio.ch=ALL-UNNAMED "
+                                " clojure.main -m " entry-ns))))
+   :doc " Executes the production server.jar "}
+
+  be-release
+  {:doc     " Creates a Java Jar for the Clojure backend "
+   :depends [fe-release]
+   :task
+   (do
+     (println " Creating backend uberjar. ")
+     (clojure " -T:build uberjar "))}
+
+  be-outdated
+  {:doc  " Runs clojure -M:outdated (antq) "
+   :task (shell " clojure -M:outdated ")}
+
+  release
+  {:depends [fe-release be-release]
+   :doc     " Creates the cljs release and then the be release "
+   :task    (println " -------------------------------------------------------------------------------- \nCreated full release. ")}
+
+  build-node-server
+  {:depends [yarn-install]
+   :doc     " Compiles the node.js server to JavaScript "
+   :task    (shell " yarn shadow-cljs release node-server ")}
+
+  start-node-server
+  {:doc     " Starts node JS Server process. "
+   :depends [build-node-server]
+   :task    (shell " node builds / node-server/node-server.js ")}}}
