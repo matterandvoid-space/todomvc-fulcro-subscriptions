@@ -1,4 +1,4 @@
-TodoMVC full stack sample application.
+TodoMVC [https://todomvc.com](https://todomvc.com) full stack sample application.
 
 The main purpose of this repository is to demonstrate how to use fulcro purely as a data management and transaction management library.
 Subscriptions on top of the fulcro app db with rendering performed by a pure UI library (helix) provide great separation of concerns.
@@ -51,7 +51,7 @@ bb fe
 ```
 After that compiles then start the backend.
 
-Start a Clojure REPL via your favorite editor with aliases `:jvm-options:dev`.
+Start a Clojure REPL via your favorite editor with the aliase `:dev`.
 In the `src/dev/user.clj` file there is a comment block to start and stop the server.
 
 ```bash
