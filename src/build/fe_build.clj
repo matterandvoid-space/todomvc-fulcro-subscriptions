@@ -8,7 +8,7 @@
   (get-in
     (assoc-in
       (config/load-cljs-edn!)
-      [:builds build-id :modules :main :init-fn] 'space.matterandvoid.todomvc.client.entry/init)
+      [:builds build-id :modules :main :init-fn] 'space.matterandvoid.todomvc.client.release-entry/init)
     [:builds build-id]))
 
 (defn release-build [{:keys [id] :or {id :main}}]
@@ -18,8 +18,6 @@
   :done)
 
 (defn build-report [{:keys [id] :or {id :main}}]
-  ;(println "id: " id)
-  ;(println "type: " (type id))
   (report/generate (get-config id)
     {:print-table true
      :report-file "fe-report.html"})

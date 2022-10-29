@@ -6,7 +6,10 @@
   applied-science/js-interop        {:mvn/version "0.3.3"}
   binaryage/devtools                {:mvn/version "1.0.6"}
   com.cognitect/transit-clj         {:mvn/version "1.0.329"}
-  com.fulcrologic/fulcro            {:mvn/version "3.5.28"}
+  ;; com.fulcrologic/fulcro            {:mvn/version "3.5.28"}
+  ;; this fork of fulcro is optimized to remove dead code from production builds.
+  com.fulcrologic/fulcro            {:git/url "git@github.com:dvingo/fulcro.git"
+                                     :git/sha "d7efc8b470f9ea89ce1c415e21b34240c7409e50"}
   com.nivekuil/nexus                {:git/url "https://github.com/nivekuil/nexus"
                                      :git/sha "3b68663ff777cbf95870ba5b5ed8d5a7cb1dcaa1"}
   com.taoensso/timbre               {:mvn/version "5.2.1"}
@@ -26,7 +29,7 @@
   org.slf4j/slf4j-nop               {:mvn/version "2.0.3"}
   reagent/reagent                   {:mvn/version "1.1.1"}
   ring/ring-defaults                {:mvn/version "0.3.4"}
-  space.matterandvoid/subscriptions {:mvn/version "2022.10.28"}
+  space.matterandvoid/subscriptions {:mvn/version "2022.10.29"}
   tick/tick                         {:mvn/version "0.5.0"}}
 
  :aliases
@@ -54,10 +57,10 @@
   {:extra-paths ["src/dev" "src/build"]
    :jvm-opts
    [;; custom malli registry
-     "-Dmalli.registry/type=custom"
-     ;; for datalevin
-     "--add-opens=java.base/java.nio=ALL-UNNAMED"
-     "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
+    "-Dmalli.registry/type=custom"
+    ;; for datalevin
+    "--add-opens=java.base/java.nio=ALL-UNNAMED"
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
    :extra-deps
    {com.lambdaisland/classpath {:mvn/version "0.4.44"}
     thheller/shadow-cljs       {:mvn/version "2.20.3"}}}}}

@@ -49,10 +49,23 @@ Compile the frontend code:
 ```bash
 bb fe
 ```
+
+If you have any favorite dev-time aliases define in `~/.clojure/deps.edn` you can add them as an argument:
+```bash
+bb fe :my-dev:scope-capture
+```
+You will see the resulting commandline invocation to shadow-cljs in the terminal output.
+
+Or edit the top block in `bb.edn` to pass them in by default.
+
+---
+
 After that compiles then start the backend.
 
 Start a Clojure REPL via your favorite editor with the aliase `:dev`.
 In the `src/dev/user.clj` file there is a comment block to start and stop the server.
+
+Other useful tasks:
 
 ```bash
 bb release
@@ -69,3 +82,13 @@ Run:
 bb tasks
 ```
 To see all of the available tasks.
+
+# Notes
+
+The clojurescript build includes some no-op namespaces to eliminate as much dev-time only code as possible from the release
+build including a fork of fulcro that cuts out rendering code from the default fulcro application constructor:
+
+https://github.com/dvingo/fulcro/tree/no-ui.
+
+The upstream fulcro release build is about 100kb of optimized JS, this version is ~80kb, which is still the 3rd largest
+dependency after clojurescript and react-dom.

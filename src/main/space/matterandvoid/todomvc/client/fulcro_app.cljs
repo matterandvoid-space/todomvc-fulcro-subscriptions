@@ -20,7 +20,9 @@
 
 (defonce fulcro-app
   (subs/with-headless-fulcro
-    (fulcro.app/fulcro-app {:initial-db {:selected-tab :all}
+    (fulcro.app/fulcro-app {:initial-db
+                            {:selected-tab :all}
+
                             :global-eql-transform
                             global-eql-transform
 
@@ -37,5 +39,5 @@
                                 (fulcro.app/default-remote-error? result)
                                 (:com.wsscode.pathom3.connect.runner/attribute-errors (:body result))))
 
-                            :remotes    {:api2   (fulcro.http/fulcro-http-remote {:url "/api" :request-middleware request-middleware})
-                                         :remote (fulcro.http/fulcro-http-remote {:url "/api" :request-middleware request-middleware})}})))
+                            :remotes
+                            {:remote (fulcro.http/fulcro-http-remote {:url "/api" :request-middleware request-middleware})}})))

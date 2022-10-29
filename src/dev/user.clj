@@ -8,10 +8,17 @@
     [space.matterandvoid.todomvc.server.pathom :as pathom-parser]
     [space.matterandvoid.todomvc.server.system :refer [start! stop!]]))
 
-(comment
+(defn go! []
   (md/start!)
   (watch-deps/start! {:aliases [:dev]})
-  (def s (start! {}))
+  (start! {})
+  )
+
+(comment
+  (def s (go!))
+  ;(md/start!)
+  ;(watch-deps/start! {:aliases [:dev]})
+  ;(def s (start! {}))
   (stop! s)
   )
 

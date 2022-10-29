@@ -7,8 +7,12 @@
    :asset-path      "js/main"
    :modules         {:main {:init-fn space.matterandvoid.todomvc.client.dev-entry/init}}
    :closure-defines {malli.registry/type "custom"}
-   :build-options   {:ns-aliases
-                     {com.fulcrologic.guardrails.core com.fulcrologic.guardrails.noop}}
+   :build-hooks     [(shadow.cljs.build-report/hook {:output-to "fe-report.html"})]
+   :release         {:build-options {:ns-aliases
+                                     {com.fulcrologic.guardrails.core               com.fulcrologic.guardrails.noop
+                                      com.fulcrologic.fulcro.inspect.inspect-client com.fulcrologic.fulcro.inspect.inspect-client-noop
+                                      taoensso.timbre                               taoensso.timbre-noop
+                                      space.matterandvoid.todomvc.malli-registry    space.matterandvoid.todomvc.malli-registry-release}}}
 
    :devtools        {:preloads [com.fulcrologic.fulcro.inspect.preload
                                 com.fulcrologic.fulcro.inspect.dom-picker-preload]}}

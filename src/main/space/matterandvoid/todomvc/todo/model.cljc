@@ -5,8 +5,7 @@
     [com.fulcrologic.fulcro.raw.components :as rc]
     [com.fulcrologic.fulcro.algorithms.form-state :as fs]
     [space.matterandvoid.todomvc.util :as util]
-    [space.matterandvoid.todomvc.malli-registry :as malli-registry]
-    [malli.util :as mu]))
+    [space.matterandvoid.todomvc.malli-registry :as malli-registry]))
 
 (def required-todo-keys [::id ::text ::completed-state])
 (def optional-todo-keys [::completed-at])
