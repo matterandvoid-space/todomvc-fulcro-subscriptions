@@ -62,7 +62,7 @@ Or edit the top block in `bb.edn` to pass them in by default.
 
 After that compiles then start the backend.
 
-Start a Clojure REPL via your favorite editor with the aliase `:dev`.
+Start a Clojure REPL via your favorite editor with the alias `:dev`.
 In the `src/dev/user.clj` file there is a comment block to start and stop the server.
 
 Other useful tasks:
